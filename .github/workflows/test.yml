@@ -29,7 +29,7 @@ jobs:
           key: verify-gamedata-buildx
       - name: Verify Gamedata
         shell: pwsh
-        run: cd test && ./test.ps1 -USE_BUILDX=$True
+        run: cd test && ./test.ps1 $True
       - name: Upload Binaries
         uses: actions/upload-artifact@v3
         with:

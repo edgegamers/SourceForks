@@ -1,39 +1,39 @@
 
 #   compiler
 #   gcc on debian with multilib
-#FROM ubuntu:focal AS compiler
+FROM bitnami/minideb:bullseye AS compiler
 
 # We are not an interactive frontend, don't bother us!
-#ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND noninteractive
 
 #   gcc
-#RUN apt update
-#RUN apt -y install build-essential
-#RUN apt -y install gcc-multilib 
-#RUN apt -y install g++-multilib
+RUN apt update
+RUN apt -y install g++ gcc make
+RUN apt -y install gcc-multilib 
+RUN apt -y install g++-multilib
 
 #   git
-#RUN apt -y install git-all
+RUN apt -y install git
 
-#RUN gcc --version
-#RUN git version --build-options
+RUN gcc --version
+RUN git version --build-options
 
 #   gdc_build
 #   Create gdc binaries
-#FROM compiler AS gdc_build
+FROM compiler AS gdc_build
 
 #   Clone SourceMod
-#RUN git clone --recursive https://github.com/alliedmodders/sourcemod.git 
-#WORKDIR sourcemod
+RUN git clone --recursive https://github.com/alliedmodders/sourcemod.git 
+WORKDIR sourcemod
 
 #   Checkout stable branch
 #RUN git checkout master
 #RUN git submodule update --remote 
 
 #   Mkdir to gdc
-#WORKDIR tools/gdc-psyfork
+WORKDIR tools/gdc-psyfork
 #   Compile
-#RUN make
+RUN make
 
 #   depot_downloader_clone
 #   Clone depot downloader
@@ -93,7 +93,8 @@ FROM runtime_multiarch AS test_runtime
 WORKDIR /test
 
 #   gdc
-COPY test/gdc tools/gdc
+COPY --from=gdc_build sourcemod/tools/gdc-psyfork/Release tools/gdc
+COPY --from=gdc_build sourcemod/tools/gdc-psyfork/symbols.txt tools/gdc/symbols.txt
 
 #   csgo
 COPY --from=csgo_downloader server server
