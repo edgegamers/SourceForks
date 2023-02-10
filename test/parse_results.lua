@@ -53,7 +53,7 @@ local function DoSigStatus(fancyosname, signame, binary, status)
 end
 
 for line in io.lines("output.temp") do
-    local hasextra, name, binary, winstat, linuxstat = line:match("(%p?) S: ([%w%p]+)%s+%((%w+)%) %- w: (%w+)     %- l: (%w+)")
+    local hasextra, name, binary, winstat, linuxstat = line:match("(%!?) S: ([%w%p]+)%s+%((%w+)%) %- w: (%w+)%s*%- l: (%w+)")
 
     if name ~= null then
         DoSigStatus("Windows", name, binary, winstat)
@@ -72,4 +72,4 @@ cprint("{magenta}[GDC]   {reset}================================================
 if good then
     return 0
 end
-return -1
+os.exit( -1 )
