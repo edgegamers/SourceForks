@@ -42,8 +42,8 @@ jobs:
         run: cd src && ./build.ps1
       - name: Upload Plugins
         uses: actions/upload-artifact@v3
-        if-no-files-found: error
         with:
+          if-no-files-found: error
           name: plugins
           path: |
             src/plugins
