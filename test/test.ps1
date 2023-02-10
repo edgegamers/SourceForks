@@ -22,7 +22,7 @@ foreach ($gamedata in $gamedatafiles)
 {
     docker run --rm sourceforks-gdc:latest -f /test/gamedata/$gamedata -g csgo -e csgo -b /test/server/csgo/bin/server.so -w /test/server/csgo/bin/server.dll -x /test/server/bin/engine.so -y /test/server/bin/engine.dll -s /test/tools/gdc/symbols.txt > output.temp
 
-    $result_process = Start-Process luajit -ArgumentList "parse_results.lua $gamedata" -NoNewWindow -PassThru -Wait
+    $result_process = Start-Process lua -ArgumentList "parse_results.lua $gamedata" -NoNewWindow -PassThru -Wait
     $result_sum = $result_sum + $result_process.ExitCode
 }
 
