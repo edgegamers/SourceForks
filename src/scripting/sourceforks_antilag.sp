@@ -11,9 +11,9 @@
 
 public Plugin:myinfo =
 {
-	name = "[CSGO] Server Exploit Fix [5/28/2021]",
+	name = "[SourceForks] [CSGO] Server Exploit Fix [5/28/2021 & 3/7/2020]",
 	author = "backwards",
-	description = "Fixes Several Server Lag Exploit",
+	description = "Fixes Several Server Lag Exploits",
 	version = SOURCEMOD_VERSION,
 	url = "http://www.steamcommunity.com/id/mypassword"
 }
@@ -66,12 +66,12 @@ public OnPluginStart()
 		SetFailState("This plugin is only compatible with CS:GO.");
 
 	//	Ratelimit spam
-	NoOpFunction(config, "Ratelimiter", "RatelimiterSize")
+	NoOpFunction(config, "Ratelimiter", "RatelimiterSize");
 
 	//	Corrupted packet spam
-	NoOpFunction(config, "CorruptedPacket", "CorruptedPacketSize")
+	NoOpFunction(config, "CorruptedPacket", "CorruptedPacketSize");
 
 	//	Invalid reliable stats spam
-	NoOpFunction(config, "InvalidReliableState", "InvalidReliableStateSize")
+	NoOpFunction(config, "InvalidReliableState", "InvalidReliableStateSize");
 
 }
