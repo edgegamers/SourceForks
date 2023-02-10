@@ -1,0 +1,4 @@
+/test/bin/*.dll
+/test/bin/*.so
+/text/output.temp
+/src/plugins/*.smx

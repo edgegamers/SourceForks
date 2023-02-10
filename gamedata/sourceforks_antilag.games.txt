@@ -1,0 +1,95 @@
+"Games"
+{
+	"#default"
+	{
+		"Keys"
+		{
+			//	How big the call instruction is
+			"CorruptedPacketSize"
+			{
+				"windows" "6"
+				"linux" "5"
+			}
+
+			"InvalidReliableStateSize"
+			{
+				"windows" "6"
+				"linux" "5"
+			}
+
+			"RatelimiterSize"
+			{
+				"windows" "6"
+				"linux" "5"
+			}
+		}
+		"Addresses"
+		{
+			"CorruptedPacket"
+			{
+				//	Offset into ProcessPacketHeader
+				//	Look for "%s:corrupted packet %i at %i\n"
+				//	Then look for the ConMsg call that consumes that.
+				//	We are overwriting the ConMsg call.
+				"windows"
+				{
+					"signature" "ProcessPacketHeader"
+					"offset" "1045"
+				}
+				"linux"
+				{
+					"signature" "ProcessPacketHeader"
+					"offset" "1095"
+				}
+			}
+			"InvalidReliableState"
+			{
+				//	Offset into ProcessPacketHeader
+				//	Look for "%s:reliable state invalid (%i).\n"
+				//	We are overwriting the call that consumes that string.
+				"windows"
+				{
+					"signature" "ProcessPacketHeader"
+					"offset" "2322"
+				}
+				"linux"
+				{
+					"signature" "ProcessPacketHeader"
+					"offset" "2437"
+				}
+			}
+			"Ratelimiter"
+			{
+				//	Offset into unknown subroutine
+				//	Look for the ConMsg call that consumes "Net channel ratelimit exceeded for %s:".
+				//	We are overwriting that call.
+				"windows"
+				{
+					"signature" "Ratelimiter"
+					"offset" "72"
+				}
+				"linux"
+				{
+					"signature" "Ratelimiter"
+					"offset" "42"
+				}
+			}
+		}
+		"Signatures"
+		{
+			"ProcessPacketHeader"
+			{
+				"library"	"engine"
+				"windows"	"\x55\x8b\xEC\x83\xEC\x18\x53\x56\x8B\x75\x08\xBA"
+				"linux"		"\x55\x89\xE5\x57\x56\x53\x83\xEC\x3C\x8B\x7D\x0C\x8B\x47\x44"
+			}
+			//	"Net channel ratelimit exceeded for %s:"
+			"Ratelimiter"
+			{
+				"library"	"engine"
+				"windows"	"\x83\x3D\x2A\x2A\x2A\x2A\x00\x7E\x70\xA1\x2A\x2A\x2A\x2A\x8B\xC8"
+				"linux" 	"\x55\x89\xE5\x53\x83\xEC\x04\x8B\x1D\x2A\x2A\x2A\x2A\x85\xDB\x7E\x2A"
+			}
+		}
+	}
+}
