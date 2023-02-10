@@ -12,16 +12,24 @@ jobs:
     name: Verify Gamedata
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: Install Lua 5.1
         uses: leafo/gh-actions-lua@v10
         with:
           luaVersion: "5.1.5"
+
+      - name: Setup BuildX
+        uses: docker/setup-buildx-action@v1
+      - name: Setup Cache
+        uses: actions/cache@v2
+        with:
+          path: test/cache
+          key: verify-gamedata-buildx
       - name: Verify Gamedata
         shell: pwsh
-        run: cd test && ./test.ps1
+        run: cd test && ./test.ps1 -USE_BUILDX=$True
       - name: Upload Binaries
         uses: actions/upload-artifact@v3
         with:

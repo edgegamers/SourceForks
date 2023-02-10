@@ -4,3 +4,4 @@ test/output.temp
 test/exporter.temp
 /src/plugins/*.smx
 test/output.temp
+test/cache

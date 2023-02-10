@@ -1,3 +1,5 @@
+param([Bool]$USE_BUILDX) 
+Write-Host $USE_BUILDX
 
 Write-Host "* Fetching latest CS:GO version..."
 $uptodate = ConvertFrom-JSON( Invoke-WebRequest -Uri "http://api.steampowered.com/ISteamApps/UpToDateCheck/v1?appid=730&version=0" )
@@ -9,7 +11,18 @@ Write-Host "========================="
 Write-Host "BUILDING DOCKER CONTAINER"
 Write-Host "========================="
 
-docker build --file Dockerfile ../ -t sourceforks-gdc:latest --build-arg CSGOVERSION=$csgo_version
+if ($USE_BUILDX -eq $True)
+{
+    Write-Host "* Using BuildX"
+    # Enable verbose caching with BuildX
+    New-Item -Path cache -Type Directory
+    docker buildx build --cache-from=type=local,src=cache --cache-to=type=local,dest=cache --file Dockerfile ../ -t sourceforks-gdc:latest --build-arg CSGOVERSION=$csgo_version
+}
+else 
+{
+    Write-Host "* Using Vanilla Docker"
+    docker build --file Dockerfile ../ -t sourceforks-gdc:latest --build-arg CSGOVERSION=$csgo_version
+}
 
 Write-Host "========================"
 Write-Host "RUNNING GAMEDATA CHECKER"

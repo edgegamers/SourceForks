@@ -1,43 +1,43 @@
 
 #   compiler
 #   gcc on debian with multilib
-FROM ubuntu:focal AS compiler
+#FROM ubuntu:focal AS compiler
 
 # We are not an interactive frontend, don't bother us!
-ENV DEBIAN_FRONTEND noninteractive
+#ENV DEBIAN_FRONTEND noninteractive
 
 #   gcc
-RUN apt update
-RUN apt -y install build-essential
-RUN apt -y install gcc-multilib 
-RUN apt -y install g++-multilib
+#RUN apt update
+#RUN apt -y install build-essential
+#RUN apt -y install gcc-multilib 
+#RUN apt -y install g++-multilib
 
 #   git
-RUN apt -y install git-all
+#RUN apt -y install git-all
 
-RUN gcc --version
-RUN git version --build-options
+#RUN gcc --version
+#RUN git version --build-options
 
 #   gdc_build
 #   Create gdc binaries
-FROM compiler AS gdc_build
+#FROM compiler AS gdc_build
 
 #   Clone SourceMod
-RUN git clone --recursive https://github.com/alliedmodders/sourcemod.git 
-WORKDIR sourcemod
+#RUN git clone --recursive https://github.com/alliedmodders/sourcemod.git 
+#WORKDIR sourcemod
 
 #   Checkout stable branch
-RUN git checkout master
-RUN git submodule update --remote 
+#RUN git checkout master
+#RUN git submodule update --remote 
 
 #   Mkdir to gdc
-WORKDIR tools/gdc-psyfork
+#WORKDIR tools/gdc-psyfork
 #   Compile
-RUN make
+#RUN make
 
 #   depot_downloader_clone
 #   Clone depot downloader
-FROM compiler as depot_downloader_clone
+FROM bitnami/git as depot_downloader_clone
 
 RUN git clone https://github.com/SteamRE/DepotDownloader.git
 
@@ -93,8 +93,7 @@ FROM runtime_multiarch AS test_runtime
 WORKDIR /test
 
 #   gdc
-COPY --from=gdc_build sourcemod/tools/gdc-psyfork/Release tools/gdc
-COPY --from=gdc_build sourcemod/tools/gdc-psyfork/symbols.txt tools/gdc/symbols.txt
+COPY test/gdc tools/gdc
 
 #   csgo
 COPY --from=csgo_downloader server server

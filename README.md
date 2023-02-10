@@ -15,4 +15,6 @@ All *additions* to the original plugins are licensed under the unilicense (see L
 A docker container is used to store CS:GO and GDC. Use `docker build . -t sourceforks-gdc` to build it,
 Or use the scripts provided in `test/` to handle running the container for you.
 
+The GDC script has the optional argument `USE_BUILDX` which can be set to `$True` if you wish to use a buildkit container instead of `docker build`. (`ps > test.ps1 $True`)
+
 Another docker container is provided for the plugins themselves--See `src/Dockerfile` and `src/build.ps1` for more info.
