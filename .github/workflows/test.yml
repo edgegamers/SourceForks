@@ -1,9 +1,9 @@
 name: Test
-on: 
+on:
   pull_request:
   push:
   schedule:
-    - cron: '0 17 * * *'
+    - cron: "0 17 * * *"
   repository_dispatch:
 
 jobs:
@@ -25,8 +25,10 @@ jobs:
       - name: Setup Cache
         uses: actions/cache@v2
         with:
-          path: test/cache
-          key: verify-gamedata-buildx
+          path: ${{github.workspace}}/test/cache
+          key: verify-gd-buildx-${{ github.run_number }}
+          restore-keys: |
+            verify-gd-buildx
       - name: Verify Gamedata
         shell: pwsh
         run: cd test && ./test.ps1 $True
