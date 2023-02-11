@@ -90,6 +90,7 @@ RUN apt-get -y install libstdc++6:i386
 
 FROM runtime_multiarch AS test_runtime
 
+
 WORKDIR /test
 
 #   gdc

@@ -8,7 +8,16 @@ Write-Host "==========================="
 Write-Host "RUNNING SOURCEPAWN COMPILER"
 Write-Host "==========================="
 
-$compile_list = "sourceforks_antilag"
+if (Test-Path -PathType Container plugins)
+{
+    Write-Host "* Clearing old plugins"
+    Remove-Item -Path plugins -Recurse
+}
+
+Write-Host "* Creating output directory"
+New-Item -Path plugins -Type Directory
+
+$compile_list = Get-ChildItem -Path ./scripting -File | Foreach-Object {$_.BaseName}
 
 foreach ($plugin in $compile_list)
 {

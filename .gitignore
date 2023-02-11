@@ -5,3 +5,4 @@ test/exporter.temp
 /src/plugins/*.smx
 test/output.temp
 test/cache
+test/logs

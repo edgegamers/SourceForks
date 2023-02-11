@@ -77,6 +77,7 @@
 		}
 		"Signatures"
 		{
+			//	"%s:reliable state invalid (%i).\n"
 			"ProcessPacketHeader"
 			{
 				"library"	"engine"

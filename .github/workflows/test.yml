@@ -31,7 +31,7 @@ jobs:
             verify-gd-buildx
       - name: Verify Gamedata
         shell: pwsh
-        run: cd test && ./test.ps1 $True
+        run: cd test && ./test.ps1 -USE_BUILDX:$True -SUPPRESS_BUILD:$True
       - name: Upload Binaries
         uses: actions/upload-artifact@v3
         with:
@@ -39,6 +39,12 @@ jobs:
           path: |
             test/bin
             !test/bin/.gitkeep
+      - name: Upload Logs
+        uses: actions/upload-artifact@v3
+        with:
+          name: gdc-logs
+          path: |
+            test/logs
   plugins:
     runs-on: ubuntu-latest
     name: Build Plugins

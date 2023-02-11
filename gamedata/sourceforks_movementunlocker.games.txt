@@ -1,0 +1,92 @@
+"Games"
+{
+	"csgo"
+	{
+        "Keys"
+        {
+			//	How many bytes to no-op.
+			//	See below for more info
+            "WalkMoveMaxSpeedSize"
+            {
+                "windows" "42"
+                "linux" "15"
+            }
+        }
+
+		"Addresses"
+		{
+			"WalkMoveMaxSpeed"
+			{
+				//	Basically, we're looking for this pseudocode in CGameMovement::WalkMove:
+
+				//	vector = [pointer + 0], [pointer + 4], [pointer + 8]
+				//	if (v1 > (v2 * v2))
+				//	{
+				//		v3 = v2 / sqrt(v1)
+				//		[pointer + 0] = [pointer + 0] * v3
+				//		[pointer + 4] = [pointer + 4] * v3
+				//		[pointer + 8] = [pointer + 8] * v3
+				//		...
+				//		vector = [pointer + 0], [pointer + 4], [pointer + 8]
+				//	}
+
+				//	Our goal is to stop that multiply by v3 from happening
+				//	and being applied to the variable "vector".
+				//	it is important that we DO NOT NO-OP THE VECTOR READ.
+
+				//	Here's how it CURRENTLY looks:
+				//	pointer is a 40h offset into a struct. So add 40 and attach as a ModRM of your choice
+				//	Currently it's [eax+40h], [eax+44h], and [eax+48h] on all platforms.
+				
+				//	On windows: Both the loading, multiplication and storing of the variables
+				//	is interleaved.
+				//	We will no-op the entire block
+
+					//	(v3 is xmm3 here)
+					//  movss   xmm0, dword ptr [eax+40h]
+					//	mulss   xmm0, v3      
+					//	movss   dword ptr [eax+40h], xmm0 
+					//	movss   xmm0, dword ptr [eax+44h] 
+					//	mulss   xmm0, v3      
+					//	movss   dword ptr [eax+44h], xmm0 
+					//	movss   xmm0, dword ptr [eax+48h]
+					//	mulss   xmm0, v3      
+					//	movss   dword ptr [eax+48h], xmm0
+
+				//	vector = [pointer + 0]... occurs below in next basic block
+
+				//	On Linux:
+				//	Variables are loaded first, then multiply + store.
+				//	We will only no-op the stores.
+
+					//	movss   dword ptr [eax+40h], xmm1
+					//	movss   dword ptr [eax+44h], xmm0
+					//	movss   dword ptr [eax+48h], xmm4
+
+
+				"windows"
+				{
+					"signature" "CGameMovement::WalkMove"
+					"offset" "670"
+				}
+				"linux"
+				{
+					"signature" "CGameMovement::WalkMove"
+					"offset" "789"
+				}
+			}
+		}
+		
+		"Signatures"
+		{
+			"CGameMovement::WalkMove"
+			{
+				//	CGameMovement can be found pretty easily: "CGameMovement"
+				//	Currently the 29th virtual of CGameMovement if my ability to count over 10 is still intact.
+				"library"	"server"
+				"windows"	"\x55\x8B\xEC\x81\xEC\x9C\x00\x00\x00\x56\x57\x8B\xF9\xC7\x45\xB0\x00\x00\x00\x00"
+				"linux"		"\x55\x89\xE5\x57\x56\x8D\x45\x88\x53\x81\xEC\xBC\x00\x00\x00"
+			}
+		}
+	}
+}
