@@ -15,7 +15,12 @@ if ($USE_BUILDX -eq $True)
 {
     Write-Host "* Using BuildX"
     # Enable verbose caching with BuildX
-    New-Item -Path cache -Type Directory
+
+    if (!(Test-Path -PathType Container cache))
+    {
+        Write-Host "* Creating cache directory"
+        New-Item -Path cache -Type Directory
+    }
     docker buildx build --load --cache-from=type=local,src=cache --cache-to=type=local,dest=cache --file Dockerfile ../ -t sourceforks-gdc:latest --build-arg CSGOVERSION=$csgo_version
 }
 else 
