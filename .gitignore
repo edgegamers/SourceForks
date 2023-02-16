@@ -3,6 +3,7 @@
 test/output.temp
 test/exporter.temp
 /src/plugins/*.smx
+/src/scripting/private/
 test/output.temp
 test/cache
 test/logs

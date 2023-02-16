@@ -6,9 +6,6 @@
 //  The original byte content of the patches
 StringMap Originals;
 
-#define CLEAN 0
-#define INJECTED 1
-
 stock void NoOpInit()
 {
 	Originals = new StringMap();

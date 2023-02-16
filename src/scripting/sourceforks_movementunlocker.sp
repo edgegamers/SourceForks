@@ -12,7 +12,7 @@ public Plugin:myinfo =
 	url = "http://www.wcfan.de/"
 }
 
-#define GAMEDATA_FILE "sourceforks_movementunlocker.games.txt"
+#define GAMEDATA_FILE "sourceforks_movementunlocker.games"
 
 GameData Config;
 
