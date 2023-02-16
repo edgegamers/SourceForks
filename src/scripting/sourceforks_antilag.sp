@@ -23,6 +23,8 @@ public Plugin:myinfo =
 	url = "http://www.steamcommunity.com/id/mypassword"
 }
 
+#define DEBUG 0
+
 #define GAMEDATA_FILE "sourceforks_antilag.games"
 #define DEFAULT_HEAT (6*60)
 #define HEAT_SUSPICIOUS (5 * 60)
@@ -46,7 +48,9 @@ enum Punishment
 
 stock void Blame(const char[] ip)
 {
+	#if DEBUG
 	PrintToServer("Blaming '%s'", ip);
+	#endif
 
 	for (int i = 1; i < MAXPLAYERS; i++)
 	{
@@ -62,7 +66,10 @@ stock void Blame(const char[] ip)
 		if (!StrEqual(ip, clientIp))
 			continue;
 		
-		//PrintToServer("Found client %i", i);
+		#if DEBUG
+		PrintToServer("Found client %i", i);
+		#endif
+
 		if (ClientHeat[i] > 0)
 			ClientHeat[i]--;
 	}
@@ -96,7 +103,9 @@ public Action Timer_CoolDownPlayers(Handle self)
 		if (IsFakeClient(i))
 			continue;
 
+		#if DEBUG
 		PrintToServer("Client %i Heat %i", i, ClientHeat[i]);
+		#endif
 
 		//	=================
 		//	Alert adminstrators to suspicious network activity.
@@ -139,7 +148,10 @@ public Action Timer_CoolDownPlayers(Handle self)
 
 public Action Timer_WarmUpPlayers(Handle self)
 {
+	#if DEBUG
 	PrintToServer("Warming up");
+	#endif
+	
 	for (int i = 1; i < MAXPLAYERS; i++)
 	{
 		ClientHeat[i] = DEFAULT_HEAT;
