@@ -120,13 +120,13 @@ public Action Timer_CoolDownPlayers(Handle self)
 					continue;
 
 				if (ClientHeat[i] > HEAT_ATTACKER)
-					PrintToChat(admin, "[SourceForks] Client %L has unusual network activity.", i)
+					PrintToChat(admin, "[SourceForks] Client '%N' (#%i) has unusual network activity.", i, GetClientUserId(i));
 
 				if (ClientHeat[i] <= HEAT_ATTACKER)
-					PrintToChat(admin, "[SourceForks] Client %L is attempting to attack the server.", i)
+					PrintToChat(admin, "[SourceForks] Client '%N' (#%i) is attempting to DDOS the server.", i, GetClientUserId(i));
 				
 				if (ClientHeat[i] <= 0 && punishment >= Punish_Kick)
-					PrintToChat(admin, "[SourceForks] Punishing client %L for attempted DDOS.", i)
+					PrintToChat(admin, "[SourceForks] Punishing client %L for attempted DDOS.", i);
 			}
 		}
 
@@ -151,7 +151,7 @@ public Action Timer_WarmUpPlayers(Handle self)
 	#if DEBUG
 	PrintToServer("Warming up");
 	#endif
-	
+
 	for (int i = 1; i < MAXPLAYERS; i++)
 	{
 		ClientHeat[i] = DEFAULT_HEAT;
@@ -165,7 +165,6 @@ public Action Timer_WarmUpPlayers(Handle self)
 //	==================================================================================
 
 DynamicDetour Detour_InvalidReliableState;
-DynamicDetour Detour_Ratelimit;
 
 public OnPluginStart()
 {
@@ -215,7 +214,6 @@ public OnClientConnected(int client)
 public OnPluginEnd()
 {
 	Detour_InvalidReliableState.Disable(Hook_Pre, Mitigate_IPArg);
-	Detour_Ratelimit.Disable(Hook_Pre, Mitigate_IPArg);
 
 	RecoverFunction(Config, "Ratelimiter", "RatelimiterSize");
 	RecoverFunction(Config, "CorruptedPacket", "CorruptedPacketSize");
