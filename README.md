@@ -2,6 +2,26 @@
 
 Maintained forks of various sourcemod plugins and gamedatas
 
+## Plugins
+
+### Antilag
+*Originaly by Backwards*
+
+Antilag merges several individual exploit plugins by Backwards and refactors them for enhanced functionality and maintainability.
+- More reliance on gamedata instead of hardcoded addresses
+- Bans players attempting to use certain exploits
+
+You can use the cvar `sourceforks_antilag_punishment` to configure the punishment for cheaters attempting to lag the server.
+- **0**: Benign (same functionality as original plugin)
+- **1**: Notify admins, otherwise benign
+- **2**: Kick the cheater if they continue
+- **3**: Permanently ban the cheater if the continue.
+
+
+### MovementUnlocker
+
+Almost identical to the original, but refactored to use gamedata.
+
 ## Licensing
 
 **ALL FORKS ARE RELEASED UNDER THE LICENSE THE ORIGINALS WERE RELEASED UNDER.**
