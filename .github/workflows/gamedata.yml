@@ -1,9 +1,9 @@
-name: Test
+name: Gamedata
 on:
   pull_request:
   push:
   schedule:
-    - cron: "0 17 * * *"
+    - cron: "0 0,8,16 * * *"
   repository_dispatch:
 
 jobs:
@@ -33,6 +33,7 @@ jobs:
         shell: pwsh
         run: cd test && ./test.ps1 -USE_BUILDX:$True -SUPPRESS_BUILD:$True
       - name: Upload Binaries
+        if: success() || failure()
         uses: actions/upload-artifact@v3
         with:
           name: binaries
@@ -40,27 +41,9 @@ jobs:
             test/bin
             !test/bin/.gitkeep
       - name: Upload Logs
+        if: success() || failure()
         uses: actions/upload-artifact@v3
         with:
           name: gdc-logs
           path: |
             test/logs
-  plugins:
-    runs-on: ubuntu-latest
-    name: Build Plugins
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Build Plugins
-        shell: pwsh
-        run: cd src && ./build.ps1
-      - name: Upload Plugins
-        uses: actions/upload-artifact@v3
-        with:
-          if-no-files-found: error
-          name: plugins
-          path: |
-            src/plugins
-            !src/plugins/.gitkeep

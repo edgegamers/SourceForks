@@ -1,0 +1,26 @@
+name: Plugins
+on:
+  pull_request:
+  push:
+  repository_dispatch:
+
+jobs:
+  plugins:
+    runs-on: ubuntu-latest
+    name: Build Plugins
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Build Plugins
+        shell: pwsh
+        run: cd src && ./build.ps1
+      - name: Upload Plugins
+        uses: actions/upload-artifact@v3
+        with:
+          if-no-files-found: error
+          name: plugins
+          path: |
+            src/plugins
+            !src/plugins/.gitkeep

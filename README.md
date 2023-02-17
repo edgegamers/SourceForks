@@ -4,6 +4,8 @@ Maintained forks of various sourcemod plugins and gamedatas
 
 ## Plugins
 
+**Current SourceMod Version:** 1.11
+
 ### Antilag
 *Originally by Backwards*
 
@@ -17,6 +19,9 @@ You can use the cvar `sourceforks_antilag_punishment` to configure the punishmen
 - **2**: Kick the cheater if they continue
 - **3**: Permanently ban the cheater if they continue.
 
+> **Note**: It is impossible for any legitimate player on a vanilla client to reach the "attempted DDOS" alert.
+> If you see this, or they were banned for DDoSing, they are cheating. Period.
+> It is possible, however, for the "suspicious network activity" alert to trigger on really, really bad connections on 93 tick or above servers.
 
 ### MovementUnlocker
 *Originally by Peace-Maker*

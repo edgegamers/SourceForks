@@ -1,9 +1,18 @@
+# Test outputs
 /test/bin/*.dll
 /test/bin/*.so
+
+# Test logs
 test/output.temp
 test/exporter.temp
-/src/plugins/*.smx
-/src/scripting/private/
 test/output.temp
 test/cache
 test/logs
+
+# Plugin things
+/src/plugins/*.smx
+/src/scripting/private/
+
+# Package things
+package/
+sourceforks.zip

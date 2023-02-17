@@ -2,6 +2,7 @@
 
 #include <sourcemod>
 #define NULLPTR view_as<Address>(0)
+#define BUFFER_SIZE 128
 
 //  The original byte content of the patches
 StringMap Originals;
@@ -85,4 +86,49 @@ stock void RecoverFunction(GameData gamedata, const char[] name, const char[] si
 	
 	int FuncSize = GetKeyInt(gamedata, sizename);
 	RestoreAddress(Func, name, FuncSize);
+}
+
+public Action Command_NoOpStatus(int client, int argc)
+{
+	ReplyToCommand(client, "[NoOp] Hello!");
+
+	StringMapSnapshot snapshot = Originals.Snapshot();
+	int length = snapshot.Length;
+
+	ReplyToCommand(client, "[NoOp] Found %i patches.", length);
+
+	for (int i = 0; i < length; i++)
+	{
+		//	Recover key
+		char key[BUFFER_SIZE];
+		snapshot.GetKey(i, key, sizeof(key));
+
+		//	Recover originals
+		any[] originals = new any[BUFFER_SIZE];
+		int original_length = 0;
+		if (!Originals.GetArray(key, originals, BUFFER_SIZE, original_length))
+		{
+			LogError("Unable to recover originals for no-op '%s'.", key);
+			ReplyToCommand(client, "[NoOp] '%s': Couldn't find original for patch", key);
+			continue;
+		}
+
+		char[] original_hex = new char[original_length * 8];
+		for (int j = 0; j < original_length; j++)
+		{
+
+			Format(original_hex, original_length * 8, "%s %X", original_hex, originals[j]);
+		}
+
+		ReplyToCommand(client, "[NoOp] '%s': Original [%i] <%s >", key, original_length, original_hex);
+
+	}
+
+	ReplyToCommand(client, "[NoOp] Goodbye!");
+	return Plugin_Handled;
+}
+
+stock void NoOpCommand(const char[] name)
+{
+	RegAdminCmd(name, Command_NoOpStatus, ADMFLAG_RCON, "Displays patch status and information", "no_op");
 }
