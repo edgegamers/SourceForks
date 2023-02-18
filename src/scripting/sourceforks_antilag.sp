@@ -20,28 +20,31 @@
 #include <banning>
 #include <sourcemod>
 #include <dhooks>
-#include "no_op.sp"
-#include "admin_utils.sp"
-#include "version.sp"
+#include "asm_patch.sp"
+#include "sourceforks_admin_utils.sp"
+#include "sourceforks_version.sp"
 
-public Plugin: myinfo = {
+public Plugin myinfo =
+{
 	name		= "[SourceForks] [CSGO] Server Exploit Fix [5/28/2021 & 3/7/2020]",
 	author		= "backwards",
 	description = "Fixes Several Server Lag Exploits",
 	version		= PLUGIN_VERSION,
 	url			= "http://www.steamcommunity.com/id/mypassword"
+
+
 }
 
 #define DEBUG				 0
 
-#define ARR_MAXPLAYERS       MAXPLAYERS + 1
+#define ARR_MAXPLAYERS		 MAXPLAYERS + 1
 
 #define GAMEDATA_FILE		 "sourceforks_antilag.games"
 #define TICKRATE			 128
 
 //	How many seconds before the state is refreshed and attacking players are banned
 #define TIMER_REFRESH		 5
-#define TIMER_REFRESH_FLOAT  5.0
+#define TIMER_REFRESH_FLOAT	 5.0
 //	How many seconds after an attack a player should be exonerated
 #define TIMER_CLEAN			 15
 
@@ -55,9 +58,9 @@ public Plugin: myinfo = {
 //	Flag that describes admins to alert
 #define ADMINFLAG_ALERT		 (ADMFLAG_BAN)
 
-GameData          Config;
-ConVar			  ConPunishment;
-int				  ClientHeat[ARR_MAXPLAYERS];
+GameData Config;
+ConVar	 ConPunishment;
+int		 ClientHeat[ARR_MAXPLAYERS];
 
 enum Punishment
 {
@@ -106,9 +109,9 @@ stock void Blame(const char[] ip)
 public MRESReturn Mitigate_IPArg(DHookParam Params)
 {
 	char ip[32];
-	Params.GetString(1, ip, sizeof(ip))
+	Params.GetString(1, ip, sizeof(ip));
 
-		Blame(ip);
+	Blame(ip);
 
 	// Return.SetString(ip);
 	return MRES_Handled;
@@ -215,24 +218,23 @@ DynamicDetour Detour_InvalidReliableState;
 
 public OnPluginStart()
 {
-
 	//	Reset existing client's heat
 	for (int i = 1; i < MAXPLAYERS; i++)
 	{
 		ClientHeat[i] = DEFAULT_HEAT;
 	}
 
-	NoOpInit();
+	PatchInit();
 
 	if (GetEngineVersion() != Engine_CSGO)
 		SetFailState("This plugin is only compatible with CS:GO.");
 
-	ConPunishment = CreateConVar("sourceforks_antilag_punishment", 
-		"3", 
-		"0 = None, 1 = Alert Admins, 2 = Kick, 3 = Permanent Ban (Default)", 
-		FCVAR_PROTECTED | FCVAR_HIDDEN);
+	ConPunishment = CreateConVar("sourceforks_antilag_punishment",
+								 "3",
+								 "0 = None, 1 = Alert Admins, 2 = Kick, 3 = Permanent Ban (Default)",
+								 FCVAR_PROTECTED | FCVAR_HIDDEN);
 
-	Config = LoadGameConfigFile(GAMEDATA_FILE);
+	Config		  = LoadGameConfigFile(GAMEDATA_FILE);
 
 	//	Ratelimit spam
 	NoOpFunction(Config, "Ratelimiter", "RatelimiterSize");
@@ -243,7 +245,7 @@ public OnPluginStart()
 	//	Invalid reliable stats spam
 	NoOpFunction(Config, "InvalidReliableState", "InvalidReliableStateSize");
 
-	NoOpCommand("noop_antilag");
+	PatchCommand("noop_antilag");
 
 	//	Now, mitigations:
 	//	InvalidReliableState
@@ -261,7 +263,6 @@ public OnPluginStart()
 
 	CreateTimer(TIMER_REFRESH_FLOAT, Timer_CoolDownPlayers, 0, TIMER_REPEAT);
 	// CreateTimer(30.0, Timer_WarmUpPlayers, 0, TIMER_REPEAT)
-
 }
 
 public OnClientConnected(int client)

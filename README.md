@@ -6,6 +6,10 @@ Maintained forks of various sourcemod plugins and gamedatas
 
 **Current SourceMod Version:** 1.11
 
+All plugins use a common patching library, `include/asm_patch.sp`.
+This library helps with un-patching code when the plugin is unloaded
+and comes with utility commands that allow you to see active patches and their original contents.
+
 ### Antilag
 *Originally by Backwards*
 
@@ -23,10 +27,23 @@ You can use the cvar `sourceforks_antilag_punishment` to configure the punishmen
 > If you see this, or they were banned for DDoSing, they are cheating. Period.
 > It is possible, however, for the "suspicious network activity" alert to trigger on really, really bad connections on 93 tick or above servers.
 
+- **Command** `noop_antilag` presents users with RCON flags the status of all active patches.
+
+
 ### MovementUnlocker
 *Originally by Peace-Maker*
 
 Almost identical to the original, but refactored to use gamedata.
+
+- **Command** `noop_movementunlocker` presents users with RCON flags the status of all active patches.
+
+### GOTV Hibernation
+*An Original Plugin*
+
+Prevents GOTV bots from leaving the server when server hibernation (`sv_hibernate`) is enabled.
+> **Note**: Also appears to prevent *any* bot from leaving the server during hibernation. This does not appear to have an impact on the hibernation's efficiency, so it should be fine.
+
+- **Command** `noop_tvhibernation` presents users with RCON flags the status of all active patches.
 
 ## Licensing
 

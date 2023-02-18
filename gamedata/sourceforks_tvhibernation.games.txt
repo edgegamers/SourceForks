@@ -1,0 +1,61 @@
+"Games"
+{
+	"csgo"
+	{
+		"Keys"
+		{
+			"PuntBotSize"
+            {
+				//	How big the mutatable block is
+				//	Linux: No-op the jump to enter the loop
+                "linux" "2"
+				//	Windows: No-op the loop body
+				"windows" "73"
+            }
+
+		}
+		"Addresses"
+		{
+			"PuntBot"
+			{
+				//	We are preventing the for loop with the string "punting bot" (see full string below)
+                //  from executing. 
+				//	LINUX: by no-op'ing the near-jump instruction.
+				//	WINDOWS: by no-op'ing the loop body
+				"linux"
+				{
+					"signature" "SetHibernating"
+					"offset" "238"
+				}
+				"windows"
+				{
+					"signature" "SetHibernating"
+					"offset" "192"
+				}
+			}
+			
+
+			"Original::SetHibernating"
+			{
+				"linux"
+				{
+					"signature" "SetHibernating"
+				}
+				"windows"
+				{
+					"signature" "SetHibernating"
+				}
+			}
+		}
+		"Signatures"
+		{
+			"SetHibernating"
+			{
+				//  "Punting bot, server is hibernating"
+				"library"	"engine"
+				"windows" 	"\x55\x8B\xEC\x83\xEC\x18\x80\x3D\x2A\x2A\x2A\x2A\x00\x53\x56\x57"
+				"linux" 	"\x55\x89\xE5\x57\x56\x53\x83\xEC\x1C\x80\x3D\x2A\x2A\x2A\x2A\x00\x8B\x5D\x08\x8B\x45\x0C"
+			}
+		}
+	}
+}

@@ -1,8 +1,8 @@
 #include <sourcemod>
-#include "no_op.sp"
-#include "version.sp"
+#include "asm_patch.sp"
+#include "sourceforks_version.sp"
 
-public Plugin: myinfo = {
+public Plugin myinfo = {
 	name		= "[SourceForks] [CSGO] Movement Unlocker",
 	author		= "Peace-Maker",
 	description = "Removes max speed limitation from players on the ground. Feels like CS:S.",
@@ -16,14 +16,14 @@ public Plugin: myinfo = {
 
 public OnPluginStart()
 {
-	NoOpInit();
+	PatchInit();
 
 	Config = LoadGameConfigFile(GAMEDATA_FILE);
 
 	if (GetEngineVersion() != Engine_CSGO)
 		SetFailState("This plugin is only compatible with CS:GO.");
 
-	NoOpCommand("noop_movementunlocker");
+	PatchCommand("noop_movementunlocker");
 	NoOpFunction(Config, "WalkMoveMaxSpeed", "WalkMoveMaxSpeedSize");
 }
 
