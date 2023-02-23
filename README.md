@@ -37,6 +37,13 @@ Almost identical to the original, but refactored to use gamedata.
 
 - **Command** `noop_movementunlocker` presents users with RCON flags the status of all active patches.
 
+### Generic Map Crash Fixes
+*An Original Plugin*
+
+Prevents several map issues from crashing or lagging the server. This includes:
+- Calling `Deactivate` on a `game_ui` that has no active player
+- Maps with no navmesh causing re-generation on the fly (Usually doesn't crash, but lots of lag.)
+
 ### GOTV Hibernation
 *An Original Plugin*
 

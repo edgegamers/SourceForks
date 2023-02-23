@@ -35,11 +35,11 @@ public Plugin myinfo =
 
 }
 
-#define DEBUG				 0
+#define DEBUG				 2
 
 #define ARR_MAXPLAYERS		 MAXPLAYERS + 1
 
-#define GAMEDATA_FILE		 "sourceforks_antilag.games"
+#define GAMEDATA_FILE		 "sourceforks_antilag"
 #define TICKRATE			 128
 
 //	How many seconds before the state is refreshed and attacking players are banned
@@ -74,7 +74,7 @@ enum Punishment
 //	STOCKS
 //	==================================================================================
 
-stock void Blame(const char[] ip)
+stock void BlameIP(const char[] ip)
 {
 #if DEBUG == 2
 	PrintToServer("Blaming '%s'", ip);
@@ -103,6 +103,12 @@ stock void Blame(const char[] ip)
 	}
 }
 
+stock void BlameClient(int index)
+{
+	if (ClientHeat[index] > 0)
+		ClientHeat[index]--;
+}
+
 // 	==================================================================================
 //	DHOOKS DETOURS
 //	==================================================================================
@@ -111,11 +117,40 @@ public MRESReturn Mitigate_IPArg(DHookParam Params)
 	char ip[32];
 	Params.GetString(1, ip, sizeof(ip));
 
-	Blame(ip);
+	BlameIP(ip);
 
-	// Return.SetString(ip);
 	return MRES_Handled;
 }
+
+//	Don't use this.
+//	For some reason dhooks creates a new stack frame before saving registers
+//	So "ebp" is not the detoured func's ebp, but the ebp of a new frame on *TOP* of our detour.
+//	Yay!!!!
+//
+//	And I'm not in the mood to stalkwalk this--after all, what point is an exploit fix if the fix crashes the server?
+//	If multiple IPs sharing the same netchan becomes an issue maybe we can dust this off.
+//	~Mooshua Feb 22 2023
+/*
+public MRESReturn Mitigate_InvalidPacket(DHookParam Params)
+{
+	//	Read "this" from stack
+	Address ebp = Params.GetAddress(1);
+	Address var_self = ebp + Offset_ProcessPacketHeader_this;
+	Address self = LoadFromAddress(var_self, NumberType_Int32);
+
+	PrintToServer("Got self of %X, ebp %X", self, ebp);
+
+	Address IClient;
+	int	client
+	if (SdkClients_GetClientFromNetChan(self, IClient, client))
+	{
+		BlameClient(client);
+		return MRES_Handled;
+	}
+
+	return MRES_Handled;
+}
+*/
 
 // 	==================================================================================
 //	TIMERS
@@ -125,7 +160,7 @@ public Action Timer_CoolDownPlayers(Handle self)
 #if DEBUG
 	PrintToServer("DEFAULT_HEAT = %i; HEAT_SUSPICIOUS = %i, HEAT_ATTACKER = %i, HEAT_BUMP_ON_REFRESH = %i", DEFAULT_HEAT, HEAT_SUSPICIOUS, HEAT_ATTACKER, HEAT_BUMP_ON_REFRESH);
 #endif
-	Punishment punishment = Punishment: ConPunishment.IntValue;
+	Punishment punishment = Punishment : ConPunishment.IntValue;
 	for (int i = 1; i < MAXPLAYERS; i++)
 	{
 		if (!IsClientInGame(i))
@@ -196,20 +231,6 @@ public Action Timer_CoolDownPlayers(Handle self)
 	return Plugin_Continue;
 }
 
-public Action Timer_WarmUpPlayers(Handle self)
-{
-#if DEBUG
-	PrintToServer("Warming up");
-#endif
-
-	for (int i = 1; i < MAXPLAYERS; i++)
-	{
-		ClientHeat[i] = DEFAULT_HEAT;
-	}
-
-	return Plugin_Continue;
-}
-
 // 	==================================================================================
 //	FORWARDS
 //	==================================================================================
@@ -224,6 +245,7 @@ public OnPluginStart()
 		ClientHeat[i] = DEFAULT_HEAT;
 	}
 
+	//	Setup patch library
 	PatchInit();
 
 	if (GetEngineVersion() != Engine_CSGO)
@@ -249,6 +271,14 @@ public OnPluginStart()
 
 	//	Now, mitigations:
 	//	InvalidReliableState
+
+	//	I shouldn't have to wonder why this is doesn't work.
+	//	But for some ungodly reason it fails to fetch the IP from EAX if I don't hardcode it.
+	//	Saving this around as a comment for when I do finally figure out why this awfulness is happening
+	/*{
+		Detour_InvalidReliableState = DynamicDetour.FromConf(Config, "Detour_InvalidReliableState");
+		Detour_InvalidReliableState.Enable(Hook_Pre, Mitigate_IPArg);
+	}*/
 	{
 		Address invalid				= Config.GetAddress("InvalidReliableState");
 		Detour_InvalidReliableState = DHookCreateDetour(invalid, CallConv_CDECL, ReturnType_Void, ThisPointer_Ignore);

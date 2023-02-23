@@ -1,0 +1,61 @@
+"Games"
+{
+	"csgo"
+	{
+		"Offsets"
+		{
+			"CBaseClient->IsHLTV"
+			{
+				//	CHLTV::StartMaster - symbol'd binaries may be useful
+				//	"Mod doesn't support SourceTV. No director module found.\n"
+
+				//	if ( <blahblah> )
+				//		return ConMsg("Mod doesn't support SourceTV. No director module found.\n")
+				//	(this + <unknown>) = argument_2
+				//	(argument_2 + <THIS VALUE>) = 1
+				"linux"		"476"
+				"windows"	"496"
+			}
+		}
+		"Functions"
+		{
+			//	Just detour the whole disconnect function
+			//	What could possibly go wrong :clueless:
+
+			//	Alternatives: Check for isHLTV in SetHibernating() punt-bot routine
+			//	Search "punt bot" in engine.
+			"CBaseClient::Disconnect"
+			{
+				"signature"	"CBaseClient::Disconnect"
+				"return"	"void"
+
+				"callconv"	"thiscall"
+				"this"		"address"
+				"hooktype"	"raw"
+
+				"arguments"
+				{
+					//	When kicking a HLTV bot during hibernation, this is always
+					//	"Punting bot, server is hibernating".
+					"reason"
+					{
+						"type"	"charptr"
+					}
+				}
+			}
+		}
+		"Signatures"
+		{
+			"CBaseClient::Disconnect"
+			{
+				//	This is (currently) the 15th vtable of CBaseClient.
+				//	If that changes, you'll probably know.
+
+				//	"UpdatePlayers", "leaving splitscreen", "ss_disconnect %d\n"
+				"library"	"engine"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x34\x57\x8B\xF9\x83\xBF\x20\x02\x00\x00\x00"
+				"linux"		"\x55\x89\xE5\x57\x56\x53\x83\xEC\x4C\x8B\x5D\x08\x8B\x83\x10\x02\x00\x00"
+			}
+		}
+	}
+}

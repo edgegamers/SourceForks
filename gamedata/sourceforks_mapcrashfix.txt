@@ -1,0 +1,71 @@
+"Games"
+{
+	"csgo"
+	{
+        "Keys"
+        {
+            "DeactivateNullReferenceSize"
+            {
+                "windows"   "48"
+                "linux"     "45"
+            }
+            "NavmeshUpdateGenerationSize"
+            {
+                "windows"   "5"
+                "linux"     "14"
+            }
+        }
+        "Addresses"
+        {
+            "DeactivateNullReference"
+            {
+                //  Source has a warning when there is no player on a game_ui.
+                //  However, this involves including the activator in a warning message. Which is null. For some ungodly reason.
+                //  Yep, that's the crash. So we're no-oping the warning block.
+                "signature" "CGameUI::Deactivate"
+                "windows"
+                {
+                    "offset" "544"
+                }
+                "linux"
+                {
+                    "offset" "59"
+                }
+            }
+            "NavmeshUpdateGeneration"
+            {
+                //  Navmesh generation which occurs every frame.
+                //  Lags and ocasionally crashes the server.
+                //  Just disable it altogether.
+                "signature" "CNavMesh::Update"
+                "windows"
+                {
+                    "offset" "29"
+                }
+                "linux"
+                {
+                    "offset" "420"
+                }
+            }
+        }
+        "Signatures"
+        {
+            "CNavMesh::Update"
+            {
+                //  Linux:   VPROF. "CNavMesh::Update" 
+                //  Windows: Find CNavMesh::UpdateGeneration (nav_generate in console to find strings, or "Creating navigation areas from sampled data...")
+                //           Only xref should be CNavMesh::Update.
+                "library"   "server"
+                "linux"     "\x55\x89\xE5\x57\x56\x53\x83\xEC\x4C\xA1\x2A\x2A\x2A\x2A\x89\x45\xB0\x85\xC0\x0F\x85\x2A\x2A\x2A\x2A\x8B\x45\x08\x8B\x90\x14\x05\x00\x00"
+                "windows"   "\x55\x8B\xEC\x83\xE4\xF0\x81\xEC\xA8\x00\x00\x00\x56\x8B\xF1\x57\x89\x74\x24\x40"
+            }
+            "CGameUI::Deactivate"
+			{
+                //  "%s Deactivate(): I have no player when called by %s!"
+				"library"	"server"
+				"windows"	"\x55\x8B\xEC\x83\xEC\x14\x53\x56\x8B\xF1\x57\x8B\x8E\x50\x05\x00\x00"
+				"linux"		"\x55\x89\xE5\x57\x56\x53\x83\xEC\x4C\x8B\x5D\x08\x8B\x93\x68\x05\x00\x00"
+			}
+        }
+    }
+}

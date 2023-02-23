@@ -1,0 +1,28 @@
+"Games"
+{
+    "csgo"
+    {
+        "Offsets"
+        {
+            "CNetChan::GetMsgHandler"
+            {
+                //  Look for CNetChan::SendDatagram
+                //  "CNetChan_TransmitBits->send"
+                //  "CNetChan::SendDatagram:  Unreliable would overfow, ignoring"
+                //  Should be +3 in the vtable.
+                "linux"     "50"
+                "windows"   "49"
+            }
+
+            "CBaseClient::GetPlayerSlot"
+            {
+                //  "%f/%d Player [%s][%d][adr:%s] was sent a datagram %d bits (%8.3f bytes)\n"
+                //  GetPlayerSlot() is [%d]
+                //  Linux: Look for the thunk to GetPlayerSlot, then the iface that consumes it.
+                //  Windows: Good luck ;)
+                "linux"     "17"
+                "windows"   "16"
+            }
+        }
+    }
+}

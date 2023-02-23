@@ -23,6 +23,38 @@
 				"linux" "5"
 			}
 		}
+		"Functions"
+		{
+			//	Hook to detect cheaters attempting to lag the server.
+
+			//	!!! THIS DOESN'T WORK !!!
+			//	!!! THIS DOESN'T WORK !!!
+			//	I don't know why but I have to hardcode it in the .sp file.
+			//	TODO: find out why :(
+			"Detour_InvalidReliableState"
+			{
+				"this"		"ignore"
+				"hooktype"	"raw"
+				"address" "InvalidReliableState"
+				"return" "void"
+				"callconv"	"cdecl"
+
+				"arguments"
+				{
+					//	by some miracle eax holds the desired arg on all platforms.
+					//	not sure how long that's going to last...
+					//	First vararg to ConMsg("%s:reliable state invalid (%i).\n", ...)
+					//	(Second arg overall)
+					"ip"
+					{
+						"size"		"-1"
+						"type" 		"charptr"
+						"flags"		"byval"
+						"register" 	"eax"
+					}
+				}
+			}
+		}
 		"Addresses"
 		{
 			"CorruptedPacket"
@@ -31,14 +63,15 @@
 				//	Look for "%s:corrupted packet %i at %i\n"
 				//	Then look for the ConMsg call that consumes that.
 				//	We are overwriting the ConMsg call.
+
+				"signature" "ProcessPacketHeader"
+
 				"windows"
 				{
-					"signature" "ProcessPacketHeader"
 					"offset" "1045"
 				}
 				"linux"
 				{
-					"signature" "ProcessPacketHeader"
 					"offset" "1095"
 				}
 			}
@@ -47,14 +80,14 @@
 				//	Offset into ProcessPacketHeader
 				//	Look for "%s:reliable state invalid (%i).\n"
 				//	We are overwriting the call that consumes that string.
+				"signature" "ProcessPacketHeader"
+
 				"windows"
 				{
-					"signature" "ProcessPacketHeader"
 					"offset" "2317"
 				}
 				"linux"
 				{
-					"signature" "ProcessPacketHeader"
 					"offset" "2432"
 				}
 			}
@@ -63,14 +96,14 @@
 				//	Offset into unknown subroutine
 				//	Look for the ConMsg call that consumes "Net channel ratelimit exceeded for %s:".
 				//	We are overwriting that call.
+				"signature" "Ratelimiter"
+
 				"windows"
 				{
-					"signature" "Ratelimiter"
 					"offset" "72"
 				}
 				"linux"
 				{
-					"signature" "Ratelimiter"
 					"offset" "42"
 				}
 			}
@@ -78,26 +111,13 @@
 
 			"Original::ProcessPacketHeader"
 			{
-				"windows"
-				{
-					"signature" "ProcessPacketHeader"
-				}
-				"linux"
-				{
-					"signature" "ProcessPacketHeader"
-				}
+				"signature" "ProcessPacketHeader"
 			}
 
 			"Original::Ratelimit"
 			{
-				"windows"
-				{
-					"signature" "Ratelimiter"
-				}
-				"linux"
-				{
-					"signature" "Ratelimiter"
-				}
+				
+				"signature" "Ratelimiter"
 			}
 		}
 		"Signatures"
