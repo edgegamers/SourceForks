@@ -160,7 +160,7 @@ public Action Timer_CoolDownPlayers(Handle self)
 #if DEBUG
 	PrintToServer("DEFAULT_HEAT = %i; HEAT_SUSPICIOUS = %i, HEAT_ATTACKER = %i, HEAT_BUMP_ON_REFRESH = %i", DEFAULT_HEAT, HEAT_SUSPICIOUS, HEAT_ATTACKER, HEAT_BUMP_ON_REFRESH);
 #endif
-	Punishment punishment = Punishment : ConPunishment.IntValue;
+	Punishment punishment = Punishment: ConPunishment.IntValue;
 	for (int i = 1; i < MAXPLAYERS; i++)
 	{
 		if (!IsClientInGame(i))
@@ -267,6 +267,12 @@ public OnPluginStart()
 	//	Invalid reliable stats spam
 	NoOpFunction(Config, "InvalidReliableState", "InvalidReliableStateSize");
 
+	//	Teleport trigger cannot find destination span
+	NoOpFunction(Config, "TeleportNoDestination", "TeleportNoDestinationSize");
+
+	//	Teleport cannot find "clear" destination spam
+	NoOpFunction(Config, "TeleportNoClearDestination", "TeleportNoClearDestinationSize");
+
 	PatchCommand("noop_antilag");
 
 	//	Now, mitigations:
@@ -307,4 +313,6 @@ public OnPluginEnd()
 	RecoverFunction(Config, "Ratelimiter", "RatelimiterSize");
 	RecoverFunction(Config, "CorruptedPacket", "CorruptedPacketSize");
 	RecoverFunction(Config, "InvalidReliableState", "InvalidReliableStateSize");
+	RecoverFunction(Config, "TeleportNoDestination", "TeleportNoDestinationSize");
+	RecoverFunction(Config, "TeleportNoClearDestination", "TeleportNoClearDestinationSize");
 }

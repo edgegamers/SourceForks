@@ -7,20 +7,31 @@
 			//	How big the call instruction is
 			"CorruptedPacketSize"
 			{
-				"windows" "6"
-				"linux" "5"
+				"windows" 	"6"
+				"linux" 	"5"
 			}
 
 			"InvalidReliableStateSize"
 			{
-				"windows" "11"
-				"linux" "10"
+				"windows" 	"11"
+				"linux" 	"10"
 			}
 
 			"RatelimiterSize"
 			{
-				"windows" "6"
-				"linux" "5"
+				"windows" 	"6"
+				"linux" 	"5"
+			}
+
+			"TeleportNoDestinationSize"
+			{
+				"windows"	"6"
+				"linux"		"5"
+			}
+			"TeleportNoClearDestinationSize"
+			{
+				"windows"	"6"
+				"linux"		"5"
 			}
 		}
 		"Functions"
@@ -107,35 +118,57 @@
 					"offset" "42"
 				}
 			}
-
-
-			"Original::ProcessPacketHeader"
+			"TeleportNoDestination"
 			{
-				"signature" "ProcessPacketHeader"
+				"signature"	"CTeleportTrigger::Touch"
+				//	We are looking for the call to "Warning" with the string ..."cannot find teleport destination named"...
+				"windows"
+				{
+					"offset"	"162"
+				}
+				"linux"
+				{
+					"offset"	"378"
+				}
 			}
-
-			"Original::Ratelimit"
+			"TeleportNoClearDestination"
 			{
-				
-				"signature" "Ratelimiter"
+				"signature"	"CTeleportTrigger::Touch"
+				//	We are looking for the call to "Warning" with the string ..."cannot find a clear player position"...
+				"windows"
+				{
+					"offset"	"326"
+				}
+				"linux"
+				{
+					"offset"	"276"
+				}
 			}
 		}
 		"Signatures"
 		{
-			//	"%s:reliable state invalid (%i).\n"
 			"ProcessPacketHeader"
 			{
+				//	"%s:reliable state invalid (%i).\n"
 				"library"	"engine"
 				"windows"	"\x55\x8b\xEC\x83\xEC\x18\x53\x56\x8B\x75\x08\xBA"
 				"linux"		"\x55\x89\xE5\x57\x56\x53\x83\xEC\x3C\x8B\x7D\x0C\x8B\x47\x44"
 			}
-			//	"Net channel ratelimit exceeded for %s:"
 			"Ratelimiter"
 			{
+				//	"Net channel ratelimit exceeded for %s:"
 				"library"	"engine"
 				"windows"	"\x83\x3D\x2A\x2A\x2A\x2A\x00\x7E\x70\xA1\x2A\x2A\x2A\x2A\x8B\xC8"
 				"linux" 	"\x55\x89\xE5\x53\x83\xEC\x04\x8B\x1D\x2A\x2A\x2A\x2A\x85\xDB\x7E\x2A"
 			}
+			"CTeleportTrigger::Touch"
+            {
+                //  "Teleport trigger '%s' cannot find destination named '%s'!\n"
+                //  "Teleport trigger '%s' cannot find a clear player position\n"
+                "library"   "server"
+                "windows"   "\x55\x8B\xEC\x83\xE4\xF0\x81\xEC\x08\x01\x00\x00\x56\x8B\xF1"
+                "linux"     "\x55\x89\xE5\x57\x56\x53\x81\xEC\x24\x01\x00\x00\x8B\x5D\x08\x8B\x7D\x0C\x8B\x03\x57"
+            }
 		}
 	}
 }

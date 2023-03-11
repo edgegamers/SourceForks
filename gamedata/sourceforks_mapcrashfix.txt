@@ -14,6 +14,11 @@
                 "windows"   "5"
                 "linux"     "14"
             }
+            "TeleportEntLookupSize"
+            {
+                "windows"   "6"
+                "linux"     "6"
+            }
         }
         "Addresses"
         {
@@ -47,6 +52,25 @@
                     "offset" "420"
                 }
             }
+            "TeleportEntLookup"
+            {
+                //  Looking up the entity to use as the destination also checks for duplicates.
+                //  If the destination is killed, however, it will attempt to compare entities against an invalid one,
+                //  Causing a crash.
+                //  Instead, we will pass 0 as the second arg to gEntList (first non-this arg)
+                //  This means we will search the entire entity list, but more likely not to crash.
+                "signature" "CTeleportTrigger::Touch"
+
+                //  The fact that this patch is exactly the same on both platforms scares me...
+                "windows"
+                {
+                    "offset"    "65"
+                }
+                "linux"
+                {
+                    "offset"    "65"
+                }
+            }
         }
         "Signatures"
         {
@@ -66,6 +90,15 @@
 				"windows"	"\x55\x8B\xEC\x83\xEC\x14\x53\x56\x8B\xF1\x57\x8B\x8E\x50\x05\x00\x00"
 				"linux"		"\x55\x89\xE5\x57\x56\x53\x83\xEC\x4C\x8B\x5D\x08\x8B\x93\x68\x05\x00\x00"
 			}
+        
+            "CTeleportTrigger::Touch"
+            {
+                //  "Teleport trigger '%s' cannot find destination named '%s'!\n"
+                //  "Teleport trigger '%s' cannot find a clear player position\n"
+                "library"   "server"
+                "windows"   "\x55\x8B\xEC\x83\xE4\xF0\x81\xEC\x08\x01\x00\x00\x56\x8B\xF1"
+                "linux"     "\x55\x89\xE5\x57\x56\x53\x81\xEC\x24\x01\x00\x00\x8B\x5D\x08\x8B\x7D\x0C\x8B\x03\x57"
+            }
         }
     }
 }

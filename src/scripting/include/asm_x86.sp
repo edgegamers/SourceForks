@@ -41,6 +41,20 @@ enum JSHORT
     JSHORT_GE   = JSHORT_NL,
 };
 
+enum PREFIX
+{
+    PREFIX_OPERAND = 0x66,
+    PREFIX_ADDRESS = 0x67
+};
+
+enum PUSH
+{
+    PUSH_IMM8   = 0x6A,
+    //  Warning: Do not use without a prefix
+    PUSH_IMM16  = 0x68,
+    PUSH_IMM32  = 0x68
+};
+
 //  Jump rel-16/32
 //enum JNEAR
 //{  

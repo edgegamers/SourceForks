@@ -43,6 +43,7 @@ Almost identical to the original, but refactored to use gamedata.
 Prevents several map issues from crashing or lagging the server. This includes:
 - Calling `Deactivate` on a `game_ui` that has no active player
 - Maps with no navmesh causing re-generation on the fly (Usually doesn't crash, but lots of lag.)
+- Killing a teleport destination will crash the server when anyone attempts to use it as a destination
 
 ### GOTV Hibernation
 *An Original Plugin*

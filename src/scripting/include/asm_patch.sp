@@ -16,6 +16,16 @@ stock void PatchInit()
 //	PATCH STOCKS
 //	=============================================================
 
+stock bool ByteOverflowCheck(const any[] list, int listsize)
+{
+	for(int i = 0; i < listsize; i++)
+	{
+		if (list[i] >= 256)
+			return false;
+	}
+	return true;
+}
+
 stock void NoOpAddress(Address start, const char[] key, int size)
 {
     any[] originals = new any[size];
@@ -37,6 +47,12 @@ stock void NoOpAddress(Address start, const char[] key, int size)
 //	Assumes that the replacement is smaller than the original.
 stock void PatchAddressInstBegin(Address start, const char[] key, int size, const any[] replacement, int replacementSize)
 {
+	//	Verify replacement does not overflow
+	if (!ByteOverflowCheck(replacement, replacementSize))
+	{
+		LogError("[SourceForks Patch] Unable to patch: Cannot coerce 'any' value to byte without loss of precision. (%s)", key)
+		return;
+	}
 	any[] originals = new any[size];
 
 	//	First, no-op some bytes
