@@ -144,6 +144,11 @@
 					"offset"	"276"
 				}
 			}
+
+			"Original::ProcessPacketHeader"
+			{
+				"signature"		"ProcessPacketHeader"
+			}
 		}
 		"Signatures"
 		{

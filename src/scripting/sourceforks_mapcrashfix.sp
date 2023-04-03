@@ -8,7 +8,7 @@ public Plugin myinfo = {
 	author		= "EdgeGamers Development",
 	description = "Prevents various map issues from crashing the server.",
 	version		= PLUGIN_VERSION,
-	url			= "https://edgegamers.com"
+	url			= PLUGIN_WEBSITE
 }
 
 #define GAMEDATA_FILE "sourceforks_mapcrashfix"

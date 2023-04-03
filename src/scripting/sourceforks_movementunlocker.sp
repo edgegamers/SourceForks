@@ -7,12 +7,12 @@ public Plugin myinfo = {
 	author		= "Peace-Maker",
 	description = "Removes max speed limitation from players on the ground. Feels like CS:S.",
 	version		= PLUGIN_VERSION,
-	url			= "http://www.wcfan.de/"
+	url			= PLUGIN_WEBSITE
 }
 
 #define GAMEDATA_FILE "sourceforks_movementunlocker"
 
-		 GameData Config;
+GameData Config;
 
 public OnPluginStart()
 {

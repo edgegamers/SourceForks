@@ -11,13 +11,12 @@ public Plugin myinfo =
 	author		= "EdgeGamers Development",
 	description = "Prevents kicking GOTV bots during server hibernation.",
 	version		= PLUGIN_VERSION,
-	url			= "https://edgegamers.com"
+	url			= PLUGIN_WEBSITE
 
 }
 
 #define GAMEDATA_FILE "sourceforks_tvhibernation"
 #define ADMINFLAG_ALERT		 (ADMFLAG_KICK)
-
 
 GameData Config;
 Address	 OffsetIsHltv;
@@ -30,17 +29,16 @@ public MRESReturn Detour_Disconnect(Address client, DHookParam parameters)
 	if (isHltv == 0)
 		return MRES_Ignored;
 
-	//	only need the first few bytes to see if it's 'override'
-	char reason[16];
+	char reason[256];
 	parameters.GetString(1, reason, sizeof(reason));
 
 	CPrintToAdminsNoServer("{darkred}If you are seeing this message, this is a severe bug.",ADMINFLAG_ALERT);
-	CPrintToAdminsNoServer("{darkred}Tell a server administrator to immediately disable 'sourceforks_tvhibernation.smx', and to wait for a patch at github.com/edgegamers/sourceforks",ADMINFLAG_ALERT);
-	CPrintToAdminsNoServer("Use the reason 'override' when kicking players or the kick will not succeed.",ADMINFLAG_ALERT);
+	CPrintToAdminsNoServer("Tell a server administrator to immediately disable 'sourceforks_tvhibernation.smx', and to wait for a patch at github.com/edgegamers/sourceforks.",ADMINFLAG_ALERT);
+	CPrintToAdminsNoServer("{darkred}Use the word 'override' in your kick reason or the kick will not succeed.",ADMINFLAG_ALERT);
 
-	//	if reason == override, then this is likely an admin performing a kick, and this->isHLTV is likely a bad offset.
+	//	if reason contains override, then this is likely an admin performing a kick, and this->isHLTV is likely a bad offset.
 	//	go through with the disconnect.
-	if (StrEqual(reason, "override"))
+	if (StrContains(reason, "override", false))
 		return MRES_Ignored;
 
 	CPrintToAdmins("{darkred}!! THE PREVIOUS DISCONNECT WAS NOT EXECUTED !!",ADMINFLAG_ALERT);
