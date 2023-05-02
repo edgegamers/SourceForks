@@ -39,7 +39,8 @@ RUN make
 #   Clone depot downloader
 FROM bitnami/git as depot_downloader_clone
 
-RUN git clone https://github.com/SteamRE/DepotDownloader.git
+#   Specifically use stable release DepotDownloader_2.4.7.
+RUN git clone --depth 1 --branch DepotDownloader_2.4.7 https://github.com/SteamRE/DepotDownloader.git
 
 #   depot_downloader_build
 #   Uses dotnet to build depot downloader cloned from earlier stage
