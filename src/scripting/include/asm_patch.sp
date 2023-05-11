@@ -28,18 +28,18 @@ stock bool ByteOverflowCheck(const any[] list, int listsize)
 
 stock void NoOpAddress(Address start, const char[] key, int size)
 {
-    any[] originals = new any[size];
+	any[] originals = new any[size];
 
 	for(int i = 0;i<size;i++)
-    {
-        any byte = LoadFromAddress(start + Address:i, NumberType_Int8);
-        originals[i] = byte;
-    
+	{
+		any byte = LoadFromAddress(start + Address:i, NumberType_Int8);
+		originals[i] = byte;
+	
 		StoreToAddress(start + Address:i, 0x90, NumberType_Int8);
-    }
+	}
 
-    //  "false" replace ensures we don't accidentally overwrite valid original with no-ops
-    Originals.SetArray(key, originals, size, false);
+	//  "false" replace ensures we don't accidentally overwrite valid original with no-ops
+	Originals.SetArray(key, originals, size, false);
 }
 
 //	Designed to patch the beginning of an instruction
@@ -59,12 +59,12 @@ stock void PatchAddressInstBegin(Address start, const char[] key, int size, cons
 	int noopSize = size - replacementSize;
 
 	for(int i = 0; i<noopSize; i++)
-    {
-        any byte = LoadFromAddress(start + Address:i, NumberType_Int8);
-        originals[i] = byte;
-    
+	{
+		any byte = LoadFromAddress(start + Address:i, NumberType_Int8);
+		originals[i] = byte;
+	
 		StoreToAddress(start + Address:i, 0x90, NumberType_Int8);
-    }
+	}
 
 	//	Then, patch some bytes!
 	//	These are very helpful comments, I know.
@@ -73,13 +73,13 @@ stock void PatchAddressInstBegin(Address start, const char[] key, int size, cons
 	for (int i = 0; i<replacementSize; i++)
 	{
 		any byte = LoadFromAddress(start + Address:i + Address:patchBegin, NumberType_Int8);
-        originals[i + patchBegin] = byte;
-    
+		originals[i + patchBegin] = byte;
+	
 		StoreToAddress(start + Address:i + Address:patchBegin, replacement[i], NumberType_Int8);
 	}
 
 	//  "false" replace ensures we don't accidentally overwrite valid original with no-ops
-    Originals.SetArray(key, originals, size, false);
+	Originals.SetArray(key, originals, size, false);
 }
 
 //	=============================================================
@@ -88,18 +88,18 @@ stock void PatchAddressInstBegin(Address start, const char[] key, int size, cons
 
 stock void RestoreAddress(Address start, const char[] key, int size)
 {
-    any[] originals = new any[size];
+	any[] originals = new any[size];
 
-    if (!Originals.GetArray(key, originals, size))
-    {
-        LogError("Unable to recover originals for no-op '%s'.", key);
+	if (!Originals.GetArray(key, originals, size))
+	{
+		LogError("Unable to recover originals for no-op '%s'.", key);
 		return;
-    }
+	}
 
-    for(int i = 0;i<size;i++)
-    {
+	for(int i = 0;i<size;i++)
+	{
 		StoreToAddress(start + Address:i, originals[i] , NumberType_Int8);
-    }
+	}
 }
 
 //	=============================================================
@@ -156,7 +156,7 @@ stock void PatchFunction(GameData gamedata, const char[] name, const char[] size
 
 stock void RecoverFunction(GameData gamedata, const char[] name, const char[] sizename)
 {
-    Address Func = gamedata.GetAddress(name);
+	Address Func = gamedata.GetAddress(name);
 		
 	if (Func == NULLPTR) {
 		LogError("Unable to find address for %s. Fix will not be reverted for that exploit.", name);
@@ -214,3 +214,6 @@ public Action Command_PatchStatus(int client, int argc)
 	ReplyToCommand(client, "[SourceForks Patches] Goodbye!");
 	return Plugin_Handled;
 }
+
+#undef BUFFER_SIZE
+#undef NULLPTR

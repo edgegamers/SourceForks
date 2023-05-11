@@ -25,10 +25,10 @@ public OnPluginStart()
 		SetFailState("This plugin is only compatible with CS:GO.");
 
 	PatchCommand("noop_mapcrashfix");
-    //  GameUI::Deactivate fix
+	//  GameUI::Deactivate fix
 	NoOpFunction(Config, "DeactivateNullReference", "DeactivateNullReferenceSize");
-    //  CNavMesh::UpdateGeneration fix
-    NoOpFunction(Config, "NavmeshUpdateGeneration", "NavmeshUpdateGenerationSize");
+	//  CNavMesh::UpdateGeneration fix
+	NoOpFunction(Config, "NavmeshUpdateGeneration", "NavmeshUpdateGenerationSize");
 	//	CTeleportTrigger::Touch fix
 	
 	//	Push a imm32 of value 0x0 to the stack.
@@ -40,6 +40,6 @@ public OnPluginStart()
 public OnPluginEnd()
 {
 	RecoverFunction(Config, "DeactivateNullReference", "DeactivateNullReferenceSize");
-    RecoverFunction(Config, "NavmeshUpdateGeneration", "NavmeshUpdateGenerationSize");
+	RecoverFunction(Config, "NavmeshUpdateGeneration", "NavmeshUpdateGenerationSize");
 	RecoverFunction(Config, "TeleportEntLookup", "TeleportEntLookupSize");
 }
