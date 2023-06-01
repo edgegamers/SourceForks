@@ -38,7 +38,7 @@ if ($USE_BUILDX -eq $True)
 else 
 {
     Write-Host "* Using Vanilla Docker"
-    iex "docker build $docker_args --file Dockerfile ../ -t sourceforks-gdc:latest --build-arg CSGOVERSION=$csgo_version"
+    iex "docker build $docker_args --progress plain --file Dockerfile ../ -t sourceforks-gdc:latest --build-arg CSGOVERSION=$csgo_version"
 }
 Write-Host "* Done!"
 

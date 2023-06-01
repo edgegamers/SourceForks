@@ -1,6 +1,13 @@
 # SourceForks
 
+| Status | [![Gamedata](https://github.com/edgegamers/SourceForks/actions/workflows/gamedata.yml/badge.svg)](https://github.com/edgegamers/SourceForks/actions/workflows/gamedata.yml) | [![Plugins](https://github.com/edgegamers/SourceForks/actions/workflows/plugins.yml/badge.svg)](https://github.com/edgegamers/SourceForks/actions/workflows/plugins.yml)
+| ------ | ----- | ----- |
+
 Maintained forks of various sourcemod plugins and gamedatas
+
+## About Us
+
+EdgeGamers is a multi-game community that hosts Minecraft, FiveM, CS:GO, TF2, Rust, and Day of Defeat: Source servers. If you like what we do and want to help, you can join our volunteer tech team using [this application](https://www.edgegamers.com/threads/318139/), or learn how to get involved as a plain old player [here](https://www.edgegamers.com/pages/registration/).
 
 ## Plugins
 
@@ -23,7 +30,7 @@ You can use the cvar `sourceforks_antilag_punishment` to configure the punishmen
 - **2**: Kick the cheater if they continue
 - **3**: Permanently ban the cheater if they continue.
 
-> **Note**: It is impossible for any legitimate player on a vanilla client to reach the "attempted DDOS" or "suspicious network activity" alert.
+> **Note**: From SourceForks 1.2 up, It is impossible for any legitimate player on a vanilla client to reach the "attempted DDOS" or "suspicious network activity" alert.
 > If you see this, or they were banned for DDoSing, they are cheating. Period.
 
 - **Command** `noop_antilag` presents users with RCON flags the status of all active patches.
@@ -40,7 +47,7 @@ Almost identical to the original, but refactored to use gamedata.
 *An Original Plugin*
 
 Prevents several map issues from crashing or lagging the server. This includes:
-- Calling `Deactivate` on a `game_ui` that has no active player
+- Several issues with a game_ui's `Deactivate` input that cause crashes
 - Maps with no navmesh causing re-generation on the fly (Usually doesn't crash, but lots of lag.)
 - Killing a teleport destination will crash the server when anyone attempts to use it as a destination
 
@@ -48,7 +55,8 @@ Prevents several map issues from crashing or lagging the server. This includes:
 *An Original Plugin*
 
 Prevents GOTV bots from leaving the server when server hibernation (`sv_hibernate`) is enabled.
-> **Note**: Also appears to prevent *any* bot from leaving the server during hibernation. This does not appear to have an impact on the hibernation's efficiency, so it should be fine.
+> **Note**: In the rare event that the internal m_isHLTV field changes, this plugin will allow any kicks that contain the word "override"
+> and will warn admins if it detects the field may have changed.
 
 - **Command** `noop_tvhibernation` presents users with RCON flags the status of all active patches.
 

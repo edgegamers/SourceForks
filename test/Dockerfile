@@ -39,18 +39,16 @@ RUN make
 #   Clone depot downloader
 FROM bitnami/git as depot_downloader_clone
 
-#   Specifically use stable release DepotDownloader_2.4.7.
-RUN git clone --depth 1 --branch DepotDownloader_2.4.7 https://github.com/SteamRE/DepotDownloader.git
+RUN git clone --depth 1 --branch master https://github.com/SteamRE/DepotDownloader.git
 
 #   depot_downloader_build
 #   Uses dotnet to build depot downloader cloned from earlier stage
 FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine as depot_downloader_build
 
-COPY --from=depot_downloader_clone DepotDownloader/DepotDownloader DepotDownloader
-WORKDIR DepotDownloader
+COPY --from=depot_downloader_clone DepotDownloader .
 
-RUN dotnet restore
-RUN dotnet build -c Release --no-restore
+RUN dotnet restore DepotDownloader
+RUN dotnet build DepotDownloader -c Release --no-restore
 
 #   runtime
 #   contains gdc, depot downloader,
@@ -73,7 +71,7 @@ COPY test/filelist.txt filelist.txt
 ARG CSGOVERSION
 
 #   Fetch CS:GO
-RUN dotnet $DEPOT_DOWNLOADER_PATH -app 740 -depot 740 -validate -all-platforms -dir server -filelist filelist.txt
+RUN dotnet $DEPOT_DOWNLOADER_PATH -app 740 -depot 740 -validate -branch public -all-platforms -dir server -filelist filelist.txt
 
   
 #   runtime_multiarch

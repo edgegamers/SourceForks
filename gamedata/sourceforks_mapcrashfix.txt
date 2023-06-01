@@ -22,21 +22,6 @@
         }
         "Addresses"
         {
-            "DeactivateNullReference"
-            {
-                //  Source has a warning when there is no player on a game_ui.
-                //  However, this involves including the activator in a warning message. Which is null. For some ungodly reason.
-                //  Yep, that's the crash. So we're no-oping the warning block.
-                "signature" "CGameUI::Deactivate"
-                "windows"
-                {
-                    "offset" "544"
-                }
-                "linux"
-                {
-                    "offset" "59"
-                }
-            }
             "NavmeshUpdateGeneration"
             {
                 //  Navmesh generation which occurs every frame.
@@ -72,6 +57,25 @@
                 }
             }
         }
+        "Functions"
+        {
+            "CGameUI::Deactivate"
+            {
+                "signature" "CGameUI::Deactivate"
+                "callconv"  "thiscall"
+                "return"    "void"
+                "this"      "entity"
+                "hooktype"  "raw"
+
+                "arguments"
+                {
+                    "activator"
+                    {
+                        "type"  "cbaseentity"
+                    }
+                }
+            }
+        }
         "Signatures"
         {
             "CNavMesh::Update"
@@ -90,7 +94,6 @@
 				"windows"	"\x55\x8B\xEC\x83\xEC\x14\x53\x56\x8B\xF1\x57\x8B\x8E\x50\x05\x00\x00"
 				"linux"		"\x55\x89\xE5\x57\x56\x53\x83\xEC\x4C\x8B\x5D\x08\x8B\x93\x68\x05\x00\x00"
 			}
-        
             "CTeleportTrigger::Touch"
             {
                 //  "Teleport trigger '%s' cannot find destination named '%s'!\n"
