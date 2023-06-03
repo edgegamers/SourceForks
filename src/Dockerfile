@@ -12,4 +12,4 @@ WORKDIR scripting
 ENV PATH = /scripting:$PATH
 ENV SPCOMPOPTS = ""
 
-ENTRYPOINT [ "./spcomp64 -E" ]
+ENTRYPOINT [ "./spcomp64" ]
