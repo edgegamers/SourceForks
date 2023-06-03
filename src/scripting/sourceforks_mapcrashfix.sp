@@ -101,20 +101,20 @@ public MRESReturn GameUIDeactivate(int self, DHookParam params)
 		}
 
 		//	Fire some outputs to reset everything to 0
-		FireEntityOutput(self, "PlayerOff", player, 0);
+		FireEntityOutput(self, "PlayerOff", player, 0.0);
 
-		SetVariantFloat(0); 	FireEntityOutput(self, "XAxis", player, 0);
-		SetVariantFloat(0); 	FireEntityOutput(self, "YAxis", player, 0);
-		SetVariantFloat(0); 	FireEntityOutput(self, "AttackAxis", player, 0);
-		SetVariantFloat(0); 	FireEntityOutput(self, "Attack2Axis", player, 0);
+		SetVariantFloat(0.0); 	FireEntityOutput(self, "XAxis", player, 0.0);
+		SetVariantFloat(0.0); 	FireEntityOutput(self, "YAxis", player, 0.0);
+		SetVariantFloat(0.0); 	FireEntityOutput(self, "AttackAxis", player, 0.0);
+		SetVariantFloat(0.0); 	FireEntityOutput(self, "Attack2Axis", player, 0.0);
 	}
 	else
 	{
 		//	NOT BASEGAME: Ensure playeroff is always fired
-		FireEntityOutput(self, "PlayerOff", self, 0);
+		FireEntityOutput(self, "PlayerOff", self, 0.0);
 	}
 	//	Reset the game_ui
-	SetEntProp(self, Prop_Data, "m_nLastButtonState", 0);
+	SetEntProp(self, Prop_Data, "m_nLastButtonState", 0.0);
 	SetEntPropEnt(self, Prop_Data, "m_player", -1);
 
 	#if DEBUG
