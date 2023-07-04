@@ -56,10 +56,6 @@ public MRESReturn GameUIDeactivate(int self, DHookParam params)
 	//	Get the player entity
 	int player = GetEntPropEnt(self, Prop_Data, "m_player");
 
-	#if DEBUG
-		PrintToServer("CGameUI::Deactivate - Player (%d)", player);
-	#endif
-
 	//	Is the player still valid/in game?
 	//	If so, handle some funky logic
 	if (player != -1)
@@ -76,10 +72,6 @@ public MRESReturn GameUIDeactivate(int self, DHookParam params)
 			//	Remove the frozen flag from the player
 			int old_flags = GetEntProp(player, Prop_Data, "m_fFlags");
 
-			#if DEBUG
-				PrintToServer("CGameUI::Deactivate - Unfreezing");
-			#endif
-
 			SetEntProp(player, Prop_Data, "m_fFlags", old_flags & (~FLAG_FROZEN));
 		}
 
@@ -91,10 +83,6 @@ public MRESReturn GameUIDeactivate(int self, DHookParam params)
 			int old_weapon = GetEntPropEnt(self, Prop_Data, "m_hSaveWeapon");
 
 			SetEntProp(player, Prop_Send, "m_iHideHUD", old_flags & (~HIDE_HUD_FLAG));
-
-			#if DEBUG
-				PrintToServer("CGameUI::Deactivate - Re-Weaponing (%d)", old_weapon);
-			#endif
 
 			if (old_weapon != -1)
 				EquipPlayerWeapon(player, old_weapon);

@@ -1,0 +1,36 @@
+"Games"
+{
+	"csgo"
+	{
+        "Keys"
+        {
+			//	How many bytes to no-op.
+            //  Note we are patching a ret so this value really doesn't matter
+            "SpawnbugSize"
+            {
+                "windows" "10"
+                "linux"   "10"
+            }
+        }
+
+		"Addresses"
+		{
+			"Spawnbug"
+			{
+                "signature" "CCSPlayer::GoToViewControl"
+			}
+		}
+		
+		"Signatures"
+		{
+			"CCSPlayer::GoToViewControl"
+			{
+				//  "info_player_terrorist" and "point_viewcontrol"
+                //  This should be a method that looks up both of those entity classnames.
+				"library"	"server"
+				"windows"	"\x55\x8B\xEC\x83\xE4\xF8\x83\xEC\x34\x53\x56\x8B\xF1\x57\x8B\x8E\xA4\x1B\x00\x00"
+				"linux"		"\x55\x31\xC9\x89\xE5\x57\x56\x53\x83\xEC\x4C\x8B\x5D\x08"
+			}
+		}
+	}
+}

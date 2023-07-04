@@ -1,0 +1,35 @@
+"Games"
+{
+	"csgo"
+	{
+        "Functions"
+        {
+            "CGameUI::Deactivate"
+            {
+                "signature" "CKnife::Swing"
+                "callconv"  "thiscall"
+                "return"    "void"
+                "this"      "entity"
+                "hooktype"  "raw"
+
+                "arguments"
+                {
+                    "mode"
+                    {
+                        "type"  "int"
+                    }
+                }
+            }
+        }
+        "Signatures"
+        {
+            "CKnife::Swing"
+            {
+                //  "Weapon_Knife.Hit" "Weapon_Knife.HitWall" "Player.GhostKnifeHit" "KnifeSlash"
+                //  NOT the precache function.
+                "library"   "server"
+
+            }
+        }
+    }
+}

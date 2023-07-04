@@ -41,6 +41,19 @@ enum JSHORT
 	JSHORT_GE   = JSHORT_NL,
 };
 
+enum RET
+{
+	//	Return, deconstruct stack frame
+	//	Should almost always use RET_NEAR.
+	RET_NEAR	= 0xC3,
+	RET_FAR		= 0xCB,
+
+	//	Return, pop values, THEN deconstruct stack frame.
+	//	Has IMM16 value of bytes to pop.
+	RET_NPOP	= 0xC2,
+	RET_FPOP	= 0xCA
+};
+
 enum PREFIX
 {
 	PREFIX_OPERAND = 0x66,
