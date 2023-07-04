@@ -1,5 +1,6 @@
 #include <sourcemod>
 #include "asm_patch.sp"
+#include "asm_x86.sp"
 #include "sourceforks_version.sp"
 
 public Plugin myinfo = {
